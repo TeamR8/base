@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
     // custom provider for Microsoft Azure AD
     {
       id: "azure-ad",
-      name: "Azure AD",
+      name: "Microsoft",
       type: "oauth",
       clientId: env.AZURE_AD_B2C_CLIENT_ID,
       clientSecret: env.AZURE_AD_B2C_CLIENT_SECRET,
@@ -60,6 +60,15 @@ export const authOptions: NextAuthOptions = {
         },
       },
       idToken: true,
+      style: {
+        logo: "https://authjs.dev/img/providers/azure.svg",
+        logoDark:
+          "https://authjs.dev/img/providers/azure-dark.svg",
+        bg: "#fff",
+        text: "#0072c6",
+        bgDark: "#0072c6",
+        textDark: "#fff",
+      },
       async profile(profile, tokens) {
         // TODO @SauceX22: Figure out the type safety here
         const profileObject = {

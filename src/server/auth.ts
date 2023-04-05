@@ -81,19 +81,23 @@ export const authOptions: NextAuthOptions = {
           image: '',
         };
         // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-        const profilePicture = await fetch(
-          `https://graph.microsoft.com/v1.0/me/photos/64x64/$value`,
-          {
-            headers: {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              Authorization: `Bearer ${tokens.access_token!}`,
-            },
+        if (tokens.access_token) {
+          const profilePicture = await fetch(
+            `https://graph.microsoft.com/v1.0/me/photos/64x64/$value`,
+            {
+              headers: {
+                Authorization: `Bearer ${tokens.access_token}`,
+              },
+            }
+          );
+          if (profilePicture.ok) {
+            const pictureBuffer = await profilePicture.arrayBuffer();
+            const pictureBase64 = Buffer.from(pictureBuffer).toString("base64");
+            profileObject.image = `data:image/jpeg;base64, ${pictureBase64}`;
           }
-        );
-        if (profilePicture.ok) {
-          const pictureBuffer = await profilePicture.arrayBuffer();
-          const pictureBase64 = Buffer.from(pictureBuffer).toString("base64");
-          profileObject.image = `data:image/jpeg;base64, ${pictureBase64}`;
+        }
+        else {
+          console.error("NO ACCESS TOKEN: Unable to fetch profile picture");
         }
         return profileObject;
       },

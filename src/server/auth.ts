@@ -80,7 +80,6 @@ export const authOptions: NextAuthOptions = {
           email: profile.email,
           image: '',
         };
-        // TODO @SauceX22: Figure out how to get the profile picture
         // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
         const profilePicture = await fetch(
           `https://graph.microsoft.com/v1.0/me/photos/64x64/$value`,

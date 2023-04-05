@@ -5,9 +5,12 @@ import {
   type DefaultSession,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import AzureADB2CProvider, { AzureB2CProfile } from "next-auth/providers/azure-ad-b2c";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import AzureADB2C from "next-auth/providers/azure-ad-b2c";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -47,10 +50,50 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
+    // custom provider for Microsoft Azure AD
+    {
+      id: "azure-ad",
+      name: "Azure AD",
+      type: "oauth",
+      clientId: env.AZURE_AD_B2C_CLIENT_ID,
+      clientSecret: env.AZURE_AD_B2C_CLIENT_SECRET,
+      wellKnown: `https://login.microsoftonline.com/${env.AZURE_AD_B2C_TENANT_NAME}/v2.0/.well-known/openid-configuration`,
+      authorization: {
+        params: {
+          scope: "openid profile email",
+        },
+      },
+      idToken: true,
+      async profile(profile, tokens) {
+        // TODO @SauceX22: Figure out the type safety here
+        const profileObject = {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          id: profile.sub,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          name: profile.name,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          email: profile.email,
+          image: '',
+        };
+        // TODO @SauceX22: Figure out how to get the profile picture
+        // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
+        const profilePicture = await fetch(
+          `https://graph.microsoft.com/v1.0/me/photos/64x64/$value`,
+          {
+            headers: {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              Authorization: `Bearer ${tokens.access_token!}`,
+            },
+          }
+        );
+        if (profilePicture.ok) {
+          const pictureBuffer = await profilePicture.arrayBuffer();
+          const pictureBase64 = Buffer.from(pictureBuffer).toString("base64");
+          profileObject.image = `data:image/jpeg;base64, ${pictureBase64}`;
+        }
+        return profileObject;
+      },
+    },
     /**
      * ...add more providers here.
      *

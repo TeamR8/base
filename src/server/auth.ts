@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
       wellKnown: `https://login.microsoftonline.com/${env.AZURE_AD_B2C_TENANT_NAME}/v2.0/.well-known/openid-configuration`,
       authorization: {
         params: {
-          scope: "openid profile email",
+          scope: "openid profile email user.Read",
         },
       },
       idToken: true,

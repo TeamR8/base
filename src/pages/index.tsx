@@ -79,8 +79,8 @@ const AuthShowcase: React.FC = () => {
         {secretMessage && <span> - {secretMessage}</span>}
         {sessionData && sessionData.user?.image && (
           <Image
-            width={50}
-            height={50}
+            width={64}
+            height={64}
             src={sessionData.user?.image}
             alt="PROFILE IMAGE"
           />

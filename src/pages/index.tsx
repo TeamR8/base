@@ -68,14 +68,14 @@ const AuthShowcase: React.FC = () => {
     { enabled: sessionData?.user !== undefined }
   );
 
-  useEffect(() => {
-    console.log("Profile image URL:", sessionData?.user?.image);
-  }, [sessionData]);
-
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {sessionData && (
+          <span>
+            Logged in as {sessionData.user?.name} {sessionData.user?.email}
+          </span>
+        )}
         {secretMessage && <span> - {secretMessage}</span>}
         {sessionData && sessionData.user?.image && (
           <Image

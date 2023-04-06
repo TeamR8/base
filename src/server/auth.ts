@@ -7,6 +7,7 @@ import {
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import AzureADProvider, { type AzureADProfile } from 'next-auth/providers/azure-ad';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -46,11 +47,9 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    // custom provider for Microsoft Azure AD
-    {
+    AzureADProvider({
       id: "azure-ad",
       name: "Microsoft",
-      type: "oauth",
       clientId: env.AZURE_AD_B2C_CLIENT_ID,
       clientSecret: env.AZURE_AD_B2C_CLIENT_SECRET,
       wellKnown: `https://login.microsoftonline.com/${env.AZURE_AD_B2C_TENANT_NAME}/v2.0/.well-known/openid-configuration`,
@@ -60,6 +59,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       idToken: true,
+      // TODO @SauceX22: change this proper MSFT logos
       style: {
         logo: "https://authjs.dev/img/providers/azure.svg",
         logoDark:
@@ -69,19 +69,15 @@ export const authOptions: NextAuthOptions = {
         bgDark: "#0072c6",
         textDark: "#fff",
       },
-      async profile(profile, tokens) {
-        // TODO @SauceX22: Figure out the type safety here
+      async profile(profile: AzureADProfile, tokens) {
         const profileObject = {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           id: profile.sub,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          name: profile.name,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          name: profile.nickname,
           email: profile.email,
-          image: '',
+          image: profile.picture,
         };
         // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
-        if (tokens.access_token) {
+        if (!profileObject.image && tokens.access_token) {
           const profilePicture = await fetch(
             `https://graph.microsoft.com/v1.0/me/photos/64x64/$value`,
             {
@@ -101,7 +97,7 @@ export const authOptions: NextAuthOptions = {
         }
         return profileObject;
       },
-    },
+    }),
     /**
      * ...add more providers here.
      *

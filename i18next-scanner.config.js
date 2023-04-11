@@ -14,7 +14,7 @@ module.exports = {
     input: ['src/**/*.{js,jsx,ts,tsx}'],
     output: './',
     options: {
-        debug: true,
+        debug: process.env.NODE_ENV === 'development',
         func: {
             list: ['t'],
             extensions: ['.js', '.jsx', '.ts', '.tsx'],

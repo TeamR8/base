@@ -7,6 +7,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
+    "ext-tran": "i18next-scanner",
     "start": "next start"
   },
   "dependencies": {

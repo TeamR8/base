@@ -1,3 +1,10 @@
 {
-  "Hello World": "مرحبا ايها العالم"
+  "First Steps →": "أول الخطوات →",
+  "Just the basics - Everything you need to know to set up your database and authentication.": "الأساسيات فقط - كل ما تحتاج إلى معرفته لإعداد قاعدة البيانات والمصادقة.",
+  "Documentation →": "Documentation →",
+  "Learn more about Create T3 App, the libraries it uses, and how to deploy it.": "Learn more about Create T3 App, the libraries it uses, and how to deploy it.",
+  "Loading tRPC query...": "Loading tRPC query...",
+  "Logged in as": "Logged in as",
+  "Sign out": "Sign out",
+  "Sign in": "Sign in"
 }

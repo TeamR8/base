@@ -71,7 +71,4 @@ module.exports = {
         });
         done();
     },
-    flush: function (done) {
-        done();
-    }
 };

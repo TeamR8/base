@@ -4,7 +4,7 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
-import i18next from "./next-i18next.config.js";
+import i18next from "./next-i18next.config.js"
 const { i18n } = i18next;
 
 /** @type {import("next").NextConfig} */
@@ -17,6 +17,6 @@ const config = {
    *
    * @see https://github.com/vercel/next.js/issues/41980
    */
-  i18n,
+  i18n: i18n,
 };
 export default config;

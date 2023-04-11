@@ -34,7 +34,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "next-i18next.config.js"
+    "next-i18next.config.js",
+    "i18next-parser.config.cjs",
   ],
   "exclude": [
     "node_modules"

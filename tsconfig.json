@@ -36,6 +36,7 @@
     "**/*.mjs",
     "next-i18next.config.js",
     "i18next-parser.config.cjs",
+    "i18next-scanner.config.js",
   ],
   "exclude": [
     "node_modules"

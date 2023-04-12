@@ -1,5 +1,4 @@
 import React from 'react'
-import LocaleOption from './LocaleOption'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'next-i18next'
 
@@ -11,11 +10,10 @@ const LocaleSwitch = (props: Props) => {
     const router = useRouter();
     const { t } = useTranslation("common");
 
-    // const handleLocaleChange = (locale: string) => {
-    //     console.log("handleLocaleChange", locale)
-    //     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    //     router.push(router.asPath, router.asPath, { locale })
-    // }
+    const handleLocaleChange = async (locale: string) => {
+        console.log("handleLocaleChange", locale)
+        await router.push(router.asPath, router.asPath, { locale })
+    }
 
     return (
         <div
@@ -23,24 +21,32 @@ const LocaleSwitch = (props: Props) => {
             id="language-dropdown"
         >
             <ul className="py-1" role="none">
-                <LocaleOption
-                    name={t("English (US)")}
-                    changeTo='en'
-                    path={router.asPath}
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    // onClick={() => handleLocaleChange("en")}
-                    flag={USFlag()}
-                />
-                <LocaleOption
-                    name={t("Arabic (SA)")}
-                    changeTo='ar'
-                    path={router.asPath}
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    // onClick={() => handleLocaleChange("en")}
-                    flag={
-                        SAFlag()
-                    }
-                />
+                <li>
+                    <button
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        role="menuitem"
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                        onClick={async () => await handleLocaleChange("en")}
+                    >
+                        <div className="inline-flex items-center">
+                            {USFlag()}
+                            {t("English (US)")}
+                        </div>
+                    </button>
+                </li >
+                <li>
+                    <button
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        role="menuitem"
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                        onClick={async () => await handleLocaleChange("ar")}
+                    >
+                        <div className="inline-flex items-center">
+                            {SAFlag()}
+                            {t("Arabic (SA)")}
+                        </div>
+                    </button>
+                </li >
             </ul>
         </div>
     )

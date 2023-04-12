@@ -12,8 +12,8 @@ const Sidebar = (props: Props) => {
   const { t } = useTranslation("common");
 
   return (
-    <aside className="fixed start-0 top-0 h-full w-64" aria-label="Sidenav">
-      <div className="h-full overflow-y-auto border-e border-gray-200 bg-white px-3 py-5 dark:border-gray-700 dark:bg-gray-800">
+    <aside className="fixed flex flex-col justify-between border-e dark:border-gray-700 border-gray-200 h-full w-64" aria-label="Sidenav">
+      <div className="h-full w-full bg-white px-3 py-5 dark:bg-gray-800">
         <ul className="space-y-2">
           <li>
             <a
@@ -312,7 +312,7 @@ const Sidebar = (props: Props) => {
           </li>
         </ul>
       </div>
-      <div className="absolute bottom-0 start-0 z-20 hidden w-full justify-center space-x-4 bg-white p-4 dark:bg-gray-800 lg:flex">
+      <div className="flex w-full min-h-fit border-t border-gray-200 pt-5 dark:border-gray-700 justify-center space-x-4 bg-white p-4 dark:bg-gray-800 lg:flex">
         <a
           href="#"
           className="inline-flex cursor-pointer justify-center rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"

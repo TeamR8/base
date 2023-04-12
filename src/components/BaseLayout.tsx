@@ -23,7 +23,7 @@ const BaseLayout = ({ children, pageTitle, description }: Props) => {
         <meta name="description" content={description} />
       </Head>
       <Sidebar />
-      <main className="ms-64">
+      <main className="ms-64 min-h-screen">
         {children}
       </main>
     </>

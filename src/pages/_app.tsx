@@ -17,13 +17,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const { locale } = useRouter();
-  useEffect(() => {
-    document.body.setAttribute('dir', locale === "ar" ? "rtl" : "ltr");
-  }, [locale])
   return (
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" />
+        <body dir={locale === "ar" ? "rtl" : "ltr"} />
       </Head>
       <SessionProvider session={session}>
         <Component {...pageProps} />

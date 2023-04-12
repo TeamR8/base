@@ -13,6 +13,7 @@ const LocaleSwitch = (props: Props) => {
     const handleLocaleChange = async (locale: string) => {
         console.log("handleLocaleChange", locale)
         await router.push(router.asPath, router.asPath, { locale })
+        document.body.setAttribute('dir', locale === "ar" ? "rtl" : "ltr");
     }
 
     return (

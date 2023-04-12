@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import BaseLayout from "~/components/BaseLayout";
+import { getServerAuthSession } from "~/server/auth";
 
 type Props = {
   // custom props here...
@@ -19,11 +20,28 @@ type Props = {
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { locale } = ctx;
+  /**
+   * Retrieve the user session from the server.
+   * 
+   * @see https://create.t3.gg/en/usage/next-auth#retrieving-session-server-side
+   */
+  const session = await getServerAuthSession(ctx);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: true,
+      },
+    };
+  }
 
   return {
     props: {
+      // user session passed to client here...
+      session,
       ...(await serverSideTranslations(locale ?? "en", [
-        // namespaces to pass to client here...
+        // locale namespaces to pass to client here...
         "common",
       ])),
     },

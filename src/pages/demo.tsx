@@ -13,6 +13,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import BaseLayout from "~/components/BaseLayout";
 import { getServerAuthSession } from "~/server/auth";
+import { UserRole } from "@prisma/client";
 
 type Props = {
   // custom props here...
@@ -27,10 +28,22 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
    */
   const session = await getServerAuthSession(ctx);
 
-  if (!session) {
+  if (!session || !session.user) {
     return {
       redirect: {
         destination: "/auth/signin",
+        permanent: true,
+      },
+    };
+  }
+
+  // check if user is an student or admin, otherwise redirect to error page
+  if ((session.user.role !== UserRole.STUDENT) && (session.user.role !== UserRole.ADMIN)) {
+    return {
+      redirect: {
+        // TODO @SauceX22: redirect to proper page
+        // TODO @SauceX22: add error page with proper message
+        destination: "/",
         permanent: true,
       },
     };
@@ -48,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-const Demo: NextPage = () => {
+const Demo: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   const router = useRouter();

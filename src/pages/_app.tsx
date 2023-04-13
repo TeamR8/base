@@ -6,15 +6,27 @@ import { appWithTranslation } from "next-i18next";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const { locale } = useRouter();
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <body dir={locale === "ar" ? "rtl" : "ltr"} />
+      </Head>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </>
   );
 };
 

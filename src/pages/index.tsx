@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   };
 };
 
-const Home: NextPage = () => {
+const Home: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   const { t } = useTranslation("common");
@@ -65,6 +65,18 @@ const Home: NextPage = () => {
               <div className="text-lg">
                 {t(
                   "Learn more about Create T3 App, the libraries it uses, and how to deploy it."
+                )}
+              </div>
+            </Link>
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              href="/demo"
+              target="_blank"
+            >
+              <h3 className="text-2xl font-bold">{t("Demo Page →")}</h3>
+              <div className="text-lg">
+                {t(
+                  "Try our demo page."
                 )}
               </div>
             </Link>

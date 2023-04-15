@@ -81,6 +81,29 @@ export const authOptions: NextAuthOptions = {
           image: profile.picture,
           role: UserRole.STUDENT,
         };
+        // https://learn.microsoft.com/en-us/graph/api/profile-get?view=graph-rest-beta&tabs=http#example-1-get-a-users-profile
+        if ((!profileObject.name || !profileObject.email) && tokens.access_token) {
+          const profileData = await fetch(
+            `https://graph.microsoft.com/beta/me/profile`,
+            {
+              headers: {
+                Authorization: `Bearer ${tokens.access_token}`,
+                contentType: "application/json",
+              },
+            });
+          if (profileData.ok) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const profileJson = await profileData.json();
+            if (!profileObject.name) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              profileObject.name = profileJson.names[0].displayName;
+            }
+            if (!profileObject.email) {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+              profileObject.email = profileJson.emails[0].address;
+            }
+          }
+        }
         // https://docs.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0#examples
         if (!profileObject.image && tokens.access_token) {
           const profilePicture = await fetch(
